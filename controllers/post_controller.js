@@ -1,7 +1,7 @@
 const PostModel = require("../models/posts_model");
 
 const getPostById = async (req, res) => {
-  const postId = req.params.id;
+  const postId = req.params.post_id;
 
   try {
     const post = await PostModel.findById(postId);
@@ -15,6 +15,22 @@ const getPostById = async (req, res) => {
   }
 };
 
+const getPost = async (req, res) => {
+  const filter = req.query.sender_id;
+  try {
+    if (filter) {
+      const posts = await PostModel.find({ sender_id: filter });
+      res.send(posts);
+    } else {
+      const posts = await PostModel.find();
+      res.send(posts);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
   getPostById,
+  getPost
 };
