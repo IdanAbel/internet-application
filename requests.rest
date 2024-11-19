@@ -16,3 +16,10 @@ POST http://localhost:3001/posts Content-Type: application/json
 "title": "Hello", "sender_id": "123456", "content": "Hello World..."
 }
 
+###
+PUT http://localhost:3001/post/673b8d0c7c0f57ba50d479aa Content-Type: application/json
+
+{
+"title": "Hello", "sender_id": "123456", "content": "Hello World..."
+}
+
