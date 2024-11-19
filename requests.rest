@@ -1,4 +1,7 @@
 ### Get all posts
 GET http://localhost:3001/posts
 
+### Get Post By Id
+GET http://localhost:3001/post/673b8d0c7c0f57ba50d479aa
+
 ###
