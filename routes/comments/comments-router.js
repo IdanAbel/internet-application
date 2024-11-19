@@ -5,4 +5,6 @@ const commentsRouter = express.Router();
 
 commentsRouter.get('/', commentsController.getAllComments);
 
+commentsRouter.post('/', commentsController.createComment);
+
 module.exports = commentsRouter;
