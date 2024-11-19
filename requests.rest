@@ -10,16 +10,18 @@ GET http://localhost:3001/post?sender_id=123456
 
 ###
 
-POST http://localhost:3001/posts Content-Type: application/json
+POST http://localhost:3001/posts 
+Content-Type: application/json
 
 {
 "title": "Hello", "sender_id": "123456", "content": "Hello World..."
 }
 
 ###
-PUT http://localhost:3001/post/673b8d0c7c0f57ba50d479aa Content-Type: application/json
+PUT http://localhost:3001/post/673ceb20a97532ab9958098d 
+Content-Type: application/json
 
 {
-"title": "Hello", "sender_id": "123456", "content": "Hello World..."
+"title": "Hello!", "sender_id": "123456", "content": "Hello World!"
 }
 

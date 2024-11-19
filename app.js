@@ -19,6 +19,9 @@ app.use('/posts', postsRoute);
 const postRoute = require('./routes/post_route');
 app.use('/post', postRoute);
 
+const commentsRouter = require('./routes/comments/comments-router');
+app.use('/comments', commentsRouter);
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
