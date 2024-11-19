@@ -9,4 +9,6 @@ commentsRouter.get('/:comment_id', commentsController.getCommentById);
 
 commentsRouter.post('/', commentsController.createComment);
 
+commentsRouter.put('/:comment_id', commentsController.updateComment);
+
 module.exports = commentsRouter;

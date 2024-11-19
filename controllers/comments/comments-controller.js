@@ -29,4 +29,25 @@ const createComment = async (req, res) => {
     }
 };
 
-module.exports = { getAllComments, getCommentById, createComment };
+const updateComment = async (req, res) => {
+    const commentId = req.params.comment_id;
+    const commentBody = req.body;
+
+    try {
+        const comment = await CommentsModel.findById(commentId);
+        if (comment) {
+            const updatedComment = await CommentsModel.findByIdAndUpdate(commentId, commentBody, {
+                new: true,
+                runValidators: true,
+            });
+
+            res.status(201).send(updatedComment);
+        } else {
+            res.status(404).send('Comment not found');
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+module.exports = { getAllComments, getCommentById, createComment, updateComment };
