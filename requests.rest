@@ -4,4 +4,14 @@ GET http://localhost:3001/posts
 ### Get Post By Id
 GET http://localhost:3001/post/673b8d0c7c0f57ba50d479aa
 
+
+
+
 ###
+
+POST http://localhost:3001/posts Content-Type: application/json
+
+{
+"title": "Hello", "owner": "Kevin", "content": "Hello World..."
+}
+
