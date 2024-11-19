@@ -1,9 +1,15 @@
 const CommentsModel = require('../../models/comments_model');
 
 const getAllComments = async (req, res) => {
+    const filter = req.query.sender_id;
     try {
-        const comments = await CommentsModel.find();
-        res.send(comments);
+        if (filter) {
+            const comments = await CommentsModel.find({ sender_id: filter });
+            res.send(comments);
+        } else {
+            const comments = await CommentsModel.find();
+            res.send(comments);
+        }
     } catch (error) {
         res.status(400).send(error.message);
     }
