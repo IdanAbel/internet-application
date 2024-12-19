@@ -2,27 +2,29 @@
 GET http://localhost:3001/posts
 
 ### Get Post By Id
-GET http://localhost:3001/post/673b8d0c7c0f57ba50d479aa
+GET http://localhost:3001/posts/673ba1254c15f13c44a5993b
 
 ###
-GET http://localhost:3001/post?sender_id=123456
+GET http://localhost:3001/posts?sender_id=123456
 
 
 ###
 
 POST http://localhost:3001/posts 
 Content-Type: application/json
+authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY0MTJjOGE3MzI0YTA3NmI4OTgyYzEiLCJyYW5kb20iOiIwLjg2NzI4MDYxNTE0NjA2ODYiLCJpYXQiOjE3MzQ2MTE4MDIsImV4cCI6MTczNDYxMTgwNX0.2-WMLZJFfGvSyb5bpNOfJnc3oCPdg1lAgzcjfuc9MP4
 
 {
-"title": "Hello", "sender_id": "123456", "content": "Hello World..."
+"title": "Hello", "owner": "aaa", "content": "Hello World..."
 }
 
 ###
 PUT http://localhost:3001/post/673ceb20a97532ab9958098d 
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY0MTJjOGE3MzI0YTA3NmI4OTgyYzEiLCJyYW5kb20iOiIwLjAxMzM0NjczOTI4MzQ3Mzg1MiIsImlhdCI6MTczNDYxMTY2NCwiZXhwIjoxNzM0NjExNjY3fQ.-NTG2Sh5HHL0Q1Z9XK88seEnIerDv3aT4p_oY1XC2oU
 
 {
-"title": "Hello!", "sender_id": "123456", "content": "Hello World!"
+"title": "Hello!", "owner": "123456", "content": "Hello World!"
 }
 
 
@@ -40,7 +42,7 @@ GET http://localhost:3001/comments?post_id=123456
 POST http://localhost:3001/comments 
 Content-Type: application/json
 {
-"message": "Hello", "sender_id": "123456", "post_id": "223344"
+"message": "Hello", "owner": "123456", "post_id": "223344"
 }
 
 ### Update a comment
@@ -48,6 +50,22 @@ PUT http://localhost:3001/comments/673ceb86a97532ab99580992
 Content-Type: application/json
 
 {
-"message": "Hello!!", "sender_id": "1234", "post_id": "2121"
+"message": "Hello!!", "owner": "1234", "post_id": "2121"
 }
 
+### 
+
+POST http://localhost:3001/auth/register 
+Content-Type: application/json
+
+{
+"username": "aaa", "email": "Idana", "password": "123456"
+}
+
+###
+POST http://localhost:3001/auth/login 
+Content-Type: application/json
+
+{
+"username": "aaa", "email": "Idana", "password": "123456"
+}
