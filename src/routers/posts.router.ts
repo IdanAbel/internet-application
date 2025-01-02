@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authMiddleware } from '../controllers/auth_controller';
-import postsController from '../controllers/posts_controller';
+import { authMiddleware } from '../controllers/auth.controller';
+import { postController } from '../controllers/posts.controller';
 
 export const postsRouter = Router();
 
-postsRouter.get('/', postsController.getAll.bind(postsController));
-postsRouter.get('/:id', postsController.getById.bind(postsController));
-postsRouter.post('/', authMiddleware, postsController.create.bind(postsController));
-postsRouter.delete('/:id', authMiddleware, postsController.deleteItem.bind(postsController));
+postsRouter.get('/', postController.getAll.bind(postController));
+postsRouter.get('/:id', postController.getById.bind(postController));
+postsRouter.post('/', authMiddleware, postController.create.bind(postController));
+postsRouter.delete('/:id', authMiddleware, postController.deleteItem.bind(postController));
