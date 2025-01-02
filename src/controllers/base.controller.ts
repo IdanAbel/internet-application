@@ -2,34 +2,25 @@ import { Request, Response } from 'express';
 import { Model } from 'mongoose';
 
 export class BaseController<T> {
-    constructor(private model: Model<T>) {
-        console.log(this.model.modelName);
-    }
+    constructor(private model: Model<T>) {}
 
     async getAll(req: Request, res: Response) {
-        const filter = req.query.owner;
         try {
-            if (filter) {
-                const item = await this.model.find({ owner: filter });
-                res.send(item);
-            } else {
-                const items = await this.model.find();
-                res.send(items);
-            }
+            const filter = req.query.owner;
+            const items = await this.model.find(filter ? { owner: filter } : {});
+            res.send(items);
         } catch (error) {
             res.status(400).send(error);
         }
     }
 
     async getById(req: Request, res: Response) {
-        const id = req.params.id;
-
         try {
-            const item = await this.model.findById(id);
-            if (item != null) {
-                res.send(item);
+            const item = await this.model.findById(req.params.id);
+            if (!item) {
+                res.status(404).send('Not Found');
             } else {
-                res.status(404).send('not found');
+                res.send(item);
             }
         } catch (error) {
             res.status(400).send(error);
@@ -37,26 +28,24 @@ export class BaseController<T> {
     }
 
     async create(req: Request, res: Response) {
-        const body = req.body;
         try {
-            const item = await this.model.create(body);
+            const item = await this.model.create(req.body);
             res.status(201).send(item);
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(400).send(error.message);
-            } else {
-                res.status(400).send(error);
-            }
+            res.status(400).send(error instanceof Error ? error.message : 'Error while creating item');
         }
     }
 
     async deleteItem(req: Request, res: Response) {
-        const id = req.params.id;
         try {
-            const rs = await this.model.findByIdAndDelete(id);
-            res.status(200).send(rs);
+            const rs = await this.model.findByIdAndDelete(req.params.id);
+            if (!rs) {
+                res.status(404).send('Not Found');
+            } else {
+                res.status(204).send();
+            }
         } catch (error) {
-            res.status(400).send(error);
+            res.status(400).send(error instanceof Error ? error.message : 'Error while creating item');
         }
     }
 }
