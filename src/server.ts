@@ -1,38 +1,21 @@
-import dotenv from "dotenv"
-dotenv.config();
-import mongoose from "mongoose";
-import bodyParser from "body-parser";
-import express, { Express } from "express";
-import postsRoute from "./routes/posts_route";
-import commentsRoute from "./routes/comments_route";
-import authRoutes from "./routes/auth_route";
+import 'dotenv/config';
+import { initDb } from './utils/init-db';
+import { app } from './app';
 
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/posts", postsRoute);
-app.use("/comments", commentsRoute);
-app.use("/auth", authRoutes);
+process.on('unhandledRejection', (reason) => {
+    console.log('An unhandled promise rejection occurred!', { reason });
+    process.exit(1);
+});
 
-const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("Connected to database"));
+process.on('uncaughtException', (error: Error) => {
+    console.log('An uncaught exception occurred!', { error: error.message });
+    process.exit(1);
+});
 
-const initApp = () => {
-  return new Promise<Express>((resolve, reject) => {
-    if (!process.env.DB_CONNECT) {
-      reject("DB_CONNECT is not defined in .env file");
-    } else {
-      mongoose
-        .connect(process.env.DB_CONNECT)
-        .then(() => {
-          resolve(app);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    }
-  });
-};
-
-export default initApp;
+(async () => {
+    await initDb();
+    const port: number = Number(process.env.PORT) || 3000
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
+})();
