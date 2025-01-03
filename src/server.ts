@@ -14,7 +14,7 @@ process.on('uncaughtException', (error: Error) => {
 
 (async () => {
     await initDb();
-    const port: number = Number(process.env.PORT) || 3000
+    const port: number = Number(process.env.PORT) || 3000;
     app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
     });
