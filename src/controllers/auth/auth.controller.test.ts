@@ -1,9 +1,9 @@
-import '../src/server';
+import '../../server';
 import supertest from 'supertest';
-import { app } from '../src/app';
-import { UserModel } from '../src/models/user.model';
-import { initDb } from '../src/utils/init-db';
-import { userMock1, userMock2 } from '../src/utils/mocks';
+import { app } from '../../app';
+import { UserModel } from '../../models/user.model';
+import { initDb } from '../../utils/init-db';
+import { userMock1, userMock2 } from '../../utils/mocks';
 import mongoose from 'mongoose';
 
 describe('/auth - Auth Controller', () => {
