@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import bodyParser from 'body-parser';
-import { authRouter, commentsRouter, postsRouter } from './routers';
+import { authRouter, commentsRouter, postsRouter } from './routes';
 
 export const app: Express = express();
 
