@@ -10,4 +10,8 @@ export const verifyDotEnv = () => {
     if (!process.env.REFRESH_TOKEN_EXPIRES) {
         throw new Error('Missing REFRESH_TOKEN_EXPIRES!');
     }
+
+    if (!process.env.PORT) {
+        throw new Error('Missing PORT!');
+    }
 };

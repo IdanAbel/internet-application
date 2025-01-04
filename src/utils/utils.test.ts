@@ -34,10 +34,16 @@ describe('Utils Functions', () => {
             expect(() => verifyDotEnv()).toThrowError('Missing REFRESH_TOKEN_EXPIRES!');
         });
 
+        it('should throw error when PORT is undefined', () => {
+            delete process.env.PORT;
+            expect(() => verifyDotEnv()).toThrowError('Missing PORT!');
+        });
+
         it('should not throw error when all environment variables are defined', () => {
             process.env.TOKEN_SECRET = 'test_token_secret';
             process.env.DB_CONNECT = 'test_db_connect';
             process.env.REFRESH_TOKEN_EXPIRES = 'test_refresh_token_expires';
+            process.env.REFRESH_TOKEN_EXPIRES = 'test_port';
             expect(() => verifyDotEnv()).not.toThrow();
         });
     });
