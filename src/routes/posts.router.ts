@@ -125,7 +125,7 @@ postsRouter.post('/', authMiddleware, postController.create.bind(postController)
  * @swagger
  *      /posts/{postId}:
  *          delete:
- *              summary: deletes a new post
+ *              summary: deletes a post
  *              tags: [Posts]
  *              parameters:
  *                  - in: path
