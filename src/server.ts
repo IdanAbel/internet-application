@@ -1,17 +1,7 @@
 import 'dotenv/config';
 import { initDb } from './utils/init-db';
 import { app } from './app';
-import {verifyDotEnv} from "./utils/verify-dotenv";
-
-process.on('unhandledRejection', (reason) => {
-    console.log('An unhandled promise rejection occurred!', { reason });
-    process.exit(1);
-});
-
-process.on('uncaughtException', (error: Error) => {
-    console.log('An uncaught exception occurred!', { error: error.message });
-    process.exit(1);
-});
+import { verifyDotEnv } from './utils/verify-dotenv';
 
 (async () => {
     verifyDotEnv();
