@@ -1,5 +1,5 @@
-import { Comment, CommentModel } from '../models/comment.model';
-import { BaseController } from './base.controller';
+import { Comment, CommentModel } from '../../models/comment.model';
+import { BaseController } from '../base.controller';
 import { Request, Response } from 'express';
 
 class CommentsController extends BaseController<Comment> {

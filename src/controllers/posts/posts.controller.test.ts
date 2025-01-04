@@ -4,14 +4,13 @@ import { PostModel } from '../../models/post.model';
 import mongoose, { Types } from 'mongoose';
 import supertest from 'supertest';
 import { app } from '../../app';
-import { postMock1 } from '../../utils/mocks/post.mock';
+import { postMock1, userMock1 } from '../../utils/mocks';
 import { UserModel } from '../../models/user.model';
-import { userMock1 } from '../../utils/mocks';
 
 describe('/posts - Posts Controller', () => {
     let userId: Types.ObjectId;
     let refreshToken: string;
-    const fakeObjectId: string = '67791c50b619529fb3878f1e';
+    const fakeId: string = '67791c50b619529fb3878f1e';
 
     beforeAll(async () => {
         await initDb();
@@ -30,11 +29,11 @@ describe('/posts - Posts Controller', () => {
     });
 
     describe('POST /posts', () => {
-        const createRoute = '/posts';
+        const createPostRoute = '/posts';
 
         it('should create a new post', async () => {
             const response = await supertest(app)
-                .post(createRoute)
+                .post(createPostRoute)
                 .set('Authorization', `JWT ${refreshToken}`)
                 .send(postMock1);
             expect(response.status).toBe(201);
@@ -43,7 +42,7 @@ describe('/posts - Posts Controller', () => {
 
         it('should fail to create a new post with invalid token', async () => {
             const response = await supertest(app)
-                .post(createRoute)
+                .post(createPostRoute)
                 .set('Authorization', `JWT invalidToken`)
                 .send(postMock1);
             expect(response.status).toBe(401);
@@ -51,14 +50,14 @@ describe('/posts - Posts Controller', () => {
 
         it('should fail to create a post with missing fields', async () => {
             const response = await supertest(app)
-                .post(createRoute)
+                .post(createPostRoute)
                 .set('Authorization', `JWT ${refreshToken}`)
                 .send({});
             expect(response.status).toBe(400);
         });
 
         it('should fail to create a new post without header', async () => {
-            const response = await supertest(app).post(createRoute).send(postMock1);
+            const response = await supertest(app).post(createPostRoute).send(postMock1);
             expect(response.status).toBe(400);
         });
     });
@@ -107,7 +106,7 @@ describe('/posts - Posts Controller', () => {
         });
 
         it('should return 404 for non-existing post', async () => {
-            const response = await supertest(app).get(`/posts/${fakeObjectId}`);
+            const response = await supertest(app).get(`/posts/${fakeId}`);
             expect(response.status).toBe(404);
         });
 
@@ -147,7 +146,7 @@ describe('/posts - Posts Controller', () => {
 
         it('should return 404 for non-existing post', async () => {
             const response = await supertest(app)
-                .delete(`/posts/${fakeObjectId}`)
+                .delete(`/posts/${fakeId}`)
                 .set('Authorization', `JWT ${refreshToken}`);
             expect(response.status).toBe(404);
         });
