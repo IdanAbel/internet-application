@@ -1,4 +1,4 @@
-import { Document, model, Model, Schema } from 'mongoose';
+import { Document, model, Model, Schema, Types } from 'mongoose';
 
 export interface User {
     username: string;
@@ -23,10 +23,10 @@ const UserSchema: Schema<User> = new Schema<User>({
     },
     refreshToken: {
         type: [String],
-        default: [],
+        default: undefined
     },
 });
 
 export const UserModel: Model<User> = model<User>('Users', UserSchema);
 
-export type UserDocument = User & Document<string>;
+export type UserDocument = User & Document<Types.ObjectId>;

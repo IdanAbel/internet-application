@@ -9,7 +9,6 @@ class CommentsController extends BaseController<Comment> {
 
     async create(req: Request, res: Response) {
         const userId = req.params.userId;
-        console.log('userId', userId);
         req.body = { ...req.body, owner: userId };
         await super.create(req, res);
     }

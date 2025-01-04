@@ -1,14 +1,15 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { UserDocument, UserModel } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { Types } from 'mongoose';
 
 const register = async (req: Request, res: Response) => {
     try {
         const password = req.body.password;
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const user = await UserModel.create({
+        const hashedPassword: string = await bcrypt.hash(password, salt);
+        const user: UserDocument = await UserModel.create({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
@@ -19,23 +20,19 @@ const register = async (req: Request, res: Response) => {
     }
 };
 
-type tTokens = {
+type Tokens = {
     accessToken: string;
     refreshToken: string;
 };
 
-const generateToken = (userId: string): tTokens | null => {
-    if (!process.env.TOKEN_SECRET) {
-        return null;
-    }
-    // generate token
+const generateToken = (userId: Types.ObjectId): Tokens => {
     const random = Math.random().toString();
     const accessToken = jwt.sign(
         {
             _id: userId,
             random: random,
         },
-        process.env.TOKEN_SECRET,
+        process.env.TOKEN_SECRET!,
         { expiresIn: process.env.TOKEN_EXPIRES },
     );
 
@@ -44,7 +41,7 @@ const generateToken = (userId: string): tTokens | null => {
             _id: userId,
             random: random,
         },
-        process.env.TOKEN_SECRET,
+        process.env.TOKEN_SECRET!,
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRES },
     );
     return {
@@ -62,53 +59,26 @@ const login = async (req: Request, res: Response) => {
         }
 
         const validPassword = await bcrypt.compare(req.body.password, user.password);
-
         if (!validPassword) {
             res.status(400).send('wrong username or password');
             return;
         }
 
-        if (!process.env.TOKEN_SECRET) {
-            res.status(500).send('Server Error');
-            return;
-        }
-        // generate token
-        const tokens = generateToken(user._id);
-
-        if (!tokens) {
-            res.status(500).send('Server Error');
-            return;
-        }
-        if (!user.refreshToken) {
-            user.refreshToken = [];
-        }
-        user.refreshToken.push(tokens.refreshToken);
-        await user.save();
-        res.status(200).send({
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-            _id: user._id,
-        });
-        return;
+        await updateRefreshTokenAndRespond(user, res);
     } catch (err) {
         res.status(400).send(err);
         return;
     }
 };
 
-const verifyRefreshToken = (refreshToken: string | undefined) => {
+const verifyRefreshToken = (refreshToken: string | undefined): Promise<UserDocument> => {
     return new Promise<UserDocument>((resolve, reject) => {
-        //get refresh token from body
         if (!refreshToken) {
             reject('fail');
             return;
         }
-        //verify token
-        if (!process.env.TOKEN_SECRET) {
-            reject('fail');
-            return;
-        }
-        jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
+
+        jwt.verify(refreshToken, process.env.TOKEN_SECRET!, async (err: any, payload: any) => {
             if (err) {
                 reject('fail');
                 return;
@@ -131,8 +101,7 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
                     return;
                 }
 
-                const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
-                user.refreshToken = tokens;
+                user.refreshToken = user.refreshToken!.filter((token) => token !== refreshToken);
 
                 resolve(user);
             } catch (err) {
@@ -155,60 +124,27 @@ const logout = async (req: Request, res: Response) => {
 
 const refresh = async (req: Request, res: Response) => {
     try {
-        const user = await verifyRefreshToken(req.body.refreshToken);
-        if (!user) {
-            res.status(400).send('fail');
-            return;
-        }
-        const tokens = generateToken(user._id);
-
-        if (!tokens) {
-            res.status(500).send('Server Error');
-            return;
-        }
-        if (!user.refreshToken) {
-            user.refreshToken = [];
-        }
-        user.refreshToken.push(tokens.refreshToken);
-        await user.save();
-        res.status(200).send({
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-            _id: user._id,
-        });
-        //send new token
+        const user: UserDocument = await verifyRefreshToken(req.body.refreshToken);
+        await updateRefreshTokenAndRespond(user, res);
     } catch (err) {
         res.status(400).send('fail');
     }
 };
 
-type Payload = {
-    _id: string;
-};
+const updateRefreshTokenAndRespond = async (user: UserDocument, res: Response) => {
+    const tokens: Tokens = generateToken(user._id);
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const authorization = req.header('authorization');
-    const token = authorization && authorization.split(' ')[1];
-    console.log('Checking token', { token });
-
-    if (!token) {
-        res.status(401).send('Token was not provided');
-        return;
-    }
-    if (!process.env.TOKEN_SECRET) {
-        res.status(500).send('Server Error');
-        return;
+    if (!user.refreshToken) {
+        user.refreshToken = [];
     }
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
-        console.log('Verifying token');
-        if (err) {
-            console.log('Token is invalid');
-            res.status(401).send('Access Denied');
-            return;
-        }
-        req.params.userId = (payload as Payload)._id;
-        next();
+    user.refreshToken.push(tokens.refreshToken);
+    await user.save();
+
+    res.status(200).send({
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        _id: user._id,
     });
 };
 

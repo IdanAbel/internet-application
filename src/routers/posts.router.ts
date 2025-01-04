@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authMiddleware } from '../controllers/auth.controller';
+import { authMiddleware } from '../middlewares/auth.middleware';
 import { postController } from '../controllers/posts.controller';
 
 export const postsRouter = Router();

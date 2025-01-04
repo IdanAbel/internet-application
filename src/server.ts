@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { initDb } from './utils/init-db';
 import { app } from './app';
+import {verifyDotEnv} from "./utils/verify-dotenv";
 
 process.on('unhandledRejection', (reason) => {
     console.log('An unhandled promise rejection occurred!', { reason });
@@ -13,6 +14,7 @@ process.on('uncaughtException', (error: Error) => {
 });
 
 (async () => {
+    verifyDotEnv();
     await initDb();
     const port: number = Number(process.env.PORT) || 3000;
     app.listen(port, () => {
