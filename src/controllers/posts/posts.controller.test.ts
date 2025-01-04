@@ -1,5 +1,4 @@
 import '../../server';
-import { initDb } from '../../utils/init-db';
 import { PostModel } from '../../models/post.model';
 import mongoose, { Types } from 'mongoose';
 import supertest from 'supertest';
@@ -13,7 +12,6 @@ describe('/posts - Posts Controller', () => {
     const fakeId: string = '67791c50b619529fb3878f1e';
 
     beforeAll(async () => {
-        await initDb();
         await UserModel.deleteMany();
         await PostModel.deleteMany();
         const registerResponse = await supertest(app).post('/auth/register').send(userMock1);

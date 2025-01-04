@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import { app } from '../../app';
 import { Comment, CommentModel } from '../../models/comment.model';
 import { UserModel } from '../../models/user.model';
-import { initDb } from '../../utils/init-db';
 import { postMock1, userMock1 } from '../../utils/mocks';
 import mongoose from 'mongoose';
 import { PostModel } from '../../models/post.model';
@@ -16,7 +15,6 @@ describe('/comments - Comments Controller', () => {
     const fakeId: string = '67791c50b619529fb3878f1e';
 
     beforeAll(async () => {
-        await initDb();
         await UserModel.deleteMany();
         await PostModel.deleteMany();
         await CommentModel.deleteMany();
@@ -146,7 +144,9 @@ describe('/comments - Comments Controller', () => {
         });
 
         it('should fail to delete a comment by id with invalid token', async () => {
-            const response = await supertest(app).delete(`/comments/${commentId}`).set('Authorization', `JWT invalidToken`);
+            const response = await supertest(app)
+                .delete(`/comments/${commentId}`)
+                .set('Authorization', `JWT invalidToken`);
             expect(response.status).toBe(401);
         });
 
