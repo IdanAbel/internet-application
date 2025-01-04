@@ -10,7 +10,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const token = authorization && authorization.split(' ')[1];
 
     if (!token) {
-        res.status(401).send('Token was not provided');
+        res.status(400).send('Token was not provided');
         return;
     }
 
