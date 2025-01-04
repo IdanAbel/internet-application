@@ -32,7 +32,7 @@ export class BaseController<T> {
             const item = await this.model.create(req.body);
             res.status(201).send(item);
         } catch (error) {
-            res.status(400).send(error instanceof Error ? error.message : 'Error while creating item');
+            res.status(400).send(error);
         }
     }
 
@@ -45,7 +45,7 @@ export class BaseController<T> {
                 res.status(204).send();
             }
         } catch (error) {
-            res.status(400).send(error instanceof Error ? error.message : 'Error while creating item');
+            res.status(400).send(error);
         }
     }
 }
