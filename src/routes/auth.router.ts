@@ -64,29 +64,30 @@ import authController from '../controllers/auth/auth.controller';
  *                      accessToken: '123cd123x1xx1'
  *                      refreshToken: '134r2134cr1x3c'
  */
+
 export const authRouter = Router();
 
 /**
  * @swagger
- * /auth/register:
- *      post:
- *          summary: registers a new user
- *          tags: [Auth]
- *          requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/User'
- *          responses:
- *              200:
- *                  description: The new user
- *                  content:
- *                      application/json:
- *                          schema:
- *                              $ref: '#/components/schemas/User'
- *              400:
- *                  description: Bad Input
+ *      /auth/register:
+ *           post:
+ *               summary: registers a new user
+ *               tags: [Auth]
+ *               requestBody:
+ *                   required: true
+ *                   content:
+ *                       application/json:
+ *                           schema:
+ *                               $ref: '#/components/schemas/User'
+ *               responses:
+ *                   200:
+ *                       description: The new user
+ *                       content:
+ *                           application/json:
+ *                               schema:
+ *                                   $ref: '#/components/schemas/User'
+ *                   400:
+ *                       description: Bad Input
  */
 authRouter.post('/register', authController.register);
 
