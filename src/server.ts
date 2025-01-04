@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { initDb } from './utils/init-db';
 import { app } from './app';
 import { verifyDotEnv } from './utils/verify-dotenv';
+import { setupSwagger } from './utils/setup-swagger';
 
 (async () => {
     verifyDotEnv();
@@ -10,4 +11,5 @@ import { verifyDotEnv } from './utils/verify-dotenv';
     app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
     });
+    setupSwagger();
 })();
