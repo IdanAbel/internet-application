@@ -1,10 +1,11 @@
-import initApp from "./server";
+import express, { Express } from 'express';
+import bodyParser from 'body-parser';
+import { authRouter, commentsRouter, postsRouter } from './routes';
 
-const port = process.env.PORT;
+export const app: Express = express();
 
-initApp().then((app) => {
-  app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-  });
-});
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/posts', postsRouter);
+app.use('/comments', commentsRouter);
+app.use('/auth', authRouter);

@@ -1,1 +1,5 @@
 node_modules/
+*.xml
+.idea
+dist/
+coverage/
